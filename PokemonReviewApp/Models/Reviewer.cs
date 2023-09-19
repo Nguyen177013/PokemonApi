@@ -1,12 +1,10 @@
-﻿using PokemonReviewApp.Models.Base;
-
-namespace PokemonReviewApp.Models
+﻿namespace PokemonReviewApp.Models
 {
-    public class Reviewer : BaseModel
+    public class Reviewer
     {
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
-        public ICollection<Review> Reviews { get; set;}
+        public ICollection<Review> Reviews { get; set; }
     }
 }
