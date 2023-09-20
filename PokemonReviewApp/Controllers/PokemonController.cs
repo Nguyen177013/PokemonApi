@@ -25,6 +25,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetPokemons()
         {
             var pokemons = this._mapper.Map<List<PokemonDto>>(this._pokemonRepository.GetPokemons());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -63,6 +64,31 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(rating);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateOwner([FromQuery] int countryId, [FromQuery] int catagoryId, [FromBody] PokemonDto pokemonCreate)
+        {
+            if (pokemonCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+            var pokemon = this._pokemonRepository.GetPokemons().Where(p => p.Name.Trim().ToUpper() == pokemonCreate.Name.ToUpper()).FirstOrDefault();
+            if (pokemon != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exists");
+                return StatusCode(422, ModelState);
+            }
+            var pokemonMap = this._mapper.Map<Pokemon>(pokemonCreate);
+
+            if (!this._pokemonRepository.CreatePokemon(countryId, catagoryId, pokemonMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(422, ModelState);
+            }
+            return Ok("Successfully Created");
         }
     }
 }

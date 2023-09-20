@@ -12,11 +12,15 @@ namespace PokemonReviewApp.Controllers
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
+        private readonly IReviewerRepository _reviewerRepository;
+        private readonly IPokemonRepository _pokemonRepository;
 
-        public ReviewController(IReviewRepository reviewRepository, IMapper mapper)
+        public ReviewController(IReviewRepository reviewRepository, IMapper mapper, IReviewerRepository reviewerRepository, IPokemonRepository pokemonRepository)
         {
             this._reviewRepository = reviewRepository;
             this._mapper = mapper;
+            this._reviewerRepository = reviewerRepository;
+            this._pokemonRepository = pokemonRepository;
         }
 
         [HttpGet]
@@ -60,6 +64,34 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(review);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int pokemonId, [FromBody] ReviewDto reviewCreate)
+        {
+            if (reviewCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+            var review = this._reviewRepository.GetReviews().Where(p => p.Title.Trim().ToUpper() == reviewCreate.Title.ToUpper()).FirstOrDefault();
+            if (review != null)
+            {
+                ModelState.AddModelError("", "Review already exists");
+                return StatusCode(422, ModelState);
+            }
+            var reviewMap = this._mapper.Map<Review>(reviewCreate);
+
+            reviewMap.Pokemon = _pokemonRepository.GetPokemon(pokemonId);
+            reviewMap.Reviewer = _reviewerRepository.GetReviewer(pokemonId);
+
+            if (!this._reviewRepository.CreateReview(reviewMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(422, ModelState);
+            }
+            return Ok("Successfully Created");
         }
     }
 }

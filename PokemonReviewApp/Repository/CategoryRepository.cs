@@ -31,5 +31,17 @@ namespace PokemonReviewApp.Repository
         {
             return this._context.Categories.Any(c => c.Id == id);
         }
+
+        public bool CreateCategory(Category category)
+        {
+            this._context.Add(category);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = this._context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }
