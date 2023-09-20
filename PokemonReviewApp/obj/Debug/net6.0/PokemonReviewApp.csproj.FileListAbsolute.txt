@@ -38,3 +38,5 @@ C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\Micr
 C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
 C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\Npgsql.dll
 C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\HP\source\repos\PokemonReviewApp\PokemonReviewApp\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
