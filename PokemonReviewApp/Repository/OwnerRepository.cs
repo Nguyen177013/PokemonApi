@@ -15,7 +15,13 @@ namespace PokemonReviewApp.Repository
 
         public bool CreateOwner(Owner owner)
         {
-            _context.Add(owner);
+            this._context.Add(owner);
+            return Save();
+        }
+
+        public bool DeleteOwner(Owner owner)
+        {
+            this._context.Remove(owner);
             return Save();
         }
 
@@ -46,8 +52,13 @@ namespace PokemonReviewApp.Repository
 
         public bool Save()
         {
-            var saved = _context.SaveChanges();
+            var saved = this._context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+        public bool UpdateOwner(Owner owner)
+        {
+            this._context.Update(owner);
+            return Save();
         }
     }
 }

@@ -65,10 +65,22 @@ namespace PokemonReviewApp.Repository
             return this._context.Pokemons.Any(p => p.Id == id);
         }
 
+        public bool UpdatePokemon(Pokemon pokemon)
+        {
+            this._context.Update(pokemon);
+            return Save();
+        }
+
         public bool Save()
         {
             var saved = this._context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool DeletePokemon(Pokemon pokemon)
+        {
+            this._context.Remove(pokemon);
+            return Save();
         }
     }
 }

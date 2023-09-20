@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PokemonReviewApp.DTO;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
-using System.Diagnostics.Metrics;
 
 namespace PokemonReviewApp.Controllers
 {
@@ -25,7 +24,7 @@ namespace PokemonReviewApp.Controllers
 
         public IActionResult GetCountries()
         {
-            var country = this._mapper.Map<CountryDto>(this._countryRepository.GetCounties());
+            var country = this._mapper.Map<List<CountryDto>>(this._countryRepository.GetCounties());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -92,6 +91,30 @@ namespace PokemonReviewApp.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+        [HttpDelete("{countryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteCountry(int countryId)
+        {
+            if (!_countryRepository.CountryExists(countryId))
+            {
+                return NotFound();
+            }
+
+            var countryToDelete = _countryRepository.GetCountry(countryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.DeleteCountry(countryToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting category");
+            }
+
+            return NoContent();
         }
     }
 }
