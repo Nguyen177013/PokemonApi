@@ -4,9 +4,22 @@ using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Repository;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";   //poli
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyHeader()
+                          .AllowAnyOrigin()
+                          .AllowAnyMethod();
+                      });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
@@ -38,8 +51,8 @@ void SeedData(IHost app)
     using (var scope = scopedFactory.CreateScope())
     {
         var service = scope.ServiceProvider.GetService<Seed>();
-        if(service != null)
-        service.SeedDataContext();
+        if (service != null)
+            service.SeedDataContext();
     }
 }
 
@@ -52,6 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
